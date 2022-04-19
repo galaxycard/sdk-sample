@@ -1,0 +1,44 @@
+diff --git a/node_modules/react-native-vision-camera/android/.vscode/settings.json b/node_modules/react-native-vision-camera/android/.vscode/settings.json
+new file mode 100644
+index 0000000..632ced2
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/.vscode/settings.json
+@@ -0,0 +1,7 @@
++{
++  "workbench.colorCustomizations": {
++    "activityBar.background": "#312E0C",
++    "titleBar.activeBackground": "#454110",
++    "titleBar.activeForeground": "#FCFBF1"
++  }
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/src/Camera.tsx b/node_modules/react-native-vision-camera/src/Camera.tsx
+index 68417ac..cf38a7e 100644
+--- a/node_modules/react-native-vision-camera/src/Camera.tsx
++++ b/node_modules/react-native-vision-camera/src/Camera.tsx
+@@ -1,9 +1,9 @@
+ import React from 'react';
+-import { requireNativeComponent, NativeModules, NativeSyntheticEvent, findNodeHandle, NativeMethods, Platform } from 'react-native';
++import { findNodeHandle, NativeMethods, NativeModules, NativeSyntheticEvent, Platform, requireNativeComponent } from 'react-native';
+ import type { FrameProcessorPerformanceSuggestion, VideoFileType } from '.';
+ import type { CameraDevice } from './CameraDevice';
+ import type { ErrorWithCause } from './CameraError';
+-import { CameraCaptureError, CameraRuntimeError, tryParseNativeCameraError, isErrorWithCause } from './CameraError';
++import { CameraCaptureError, CameraRuntimeError, isErrorWithCause, tryParseNativeCameraError } from './CameraError';
+ import type { CameraProps } from './CameraProps';
+ import type { Frame } from './Frame';
+ import type { PhotoFile, TakePhotoOptions } from './PhotoFile';
+@@ -442,7 +442,12 @@ export class Camera extends React.PureComponent<CameraProps> {
+   private unsetFrameProcessor(): void {
+     this.assertFrameProcessorsEnabled();
+     // @ts-expect-error JSI functions aren't typed
+-    global.unsetFrameProcessor(this.handle);
++    try {
++      // @ts-expect-error JSI functions aren't typed
++      global.unsetFrameProcessor(this.handle);
++    } catch (e) {
++      console.warn(e);
++    }
+   }
+ 
+   private onViewReady(): void {
